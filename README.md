@@ -19,8 +19,11 @@ Other:
 	Sleep mode
 
 
-I will be glad when you share the further development, I will continuously add other applications and options.
+I be glad when you share the further development, I will continuously add other applications and options.
 
+QRCode showing:
+
+	QRPrint("www.google.com");
 
 SimpleBeacon:
 
@@ -33,3 +36,10 @@ SimpleBeacon:
 			2	http://
 			3	https://
 	ble.AltBeacon();
+
+
+Based on:
+
+	https://github.com/Kongduino/M5_QR_Code
+	https://github.com/ricmoo/qrcode
+	
