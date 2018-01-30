@@ -1,3 +1,19 @@
+void appQRPrint(){
+  menuidx = 1;
+  menulock = 0;
+  while(M5.BtnB.wasPressed()){
+    M5.update();
+  }  
+  QRPrint("www.google.com");
+  while(!M5.BtnB.wasPressed()){
+    M5.update();
+  }
+  M5.Lcd.fillScreen(TFT_BLACK);
+  menuUpdate(menuidx, menulock);  
+}
+
+
+
 void appBLEBaecon(){
   byte beaconIdx = 0;
   menuDrawMenu(F("BLE BEACON SIMULATOR"),F(""),F("ESC"),F(""),sys_menucolor,sys_windowcolor,sys_menutextcolor);

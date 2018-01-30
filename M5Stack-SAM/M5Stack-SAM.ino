@@ -3,6 +3,7 @@
 #include "utility/DHT12.h"
 #include <Wire.h>
 #include "SimpleBeacon.h"
+#include "qrcode.h"
 
 SimpleBeacon ble;
 DHT12 dht12;

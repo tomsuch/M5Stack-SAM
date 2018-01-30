@@ -112,7 +112,7 @@ void menuSystemLevel(byte inmenuidx){
 
 void menuAplikaceLevel(byte inmenuidx){
   menuidxmin = 0;
-  menuidxmax = 4;
+  menuidxmax = 5;
   switch (inmenuidx) {
     case 0:
       menuIsMenu = LOW;
@@ -135,6 +135,11 @@ void menuAplikaceLevel(byte inmenuidx){
       windowPrintInfoText(F("BLE Beacon SIMULATOR"),sys_menutextcolor);
       break;
     case 4:
+      menuIsMenu = LOW;
+      menuWindowClr(sys_windowcolor);
+      windowPrintInfoText(F("QR CODE"),sys_menutextcolor);
+      break;
+    case 5:
       menuIsMenu = LOW;
       menuWindowClr(sys_windowcolor);
       windowPrintInfoText(F("RETURN"),sys_menutextcolor);
@@ -178,6 +183,9 @@ void menuRunApp(byte inmenuidx, byte inmenulock){
     appBLEBaecon();
   }
   if(inmenulock==1 and inmenuidx==4){
+    appQRPrint();
+  }
+  if(inmenulock==1 and inmenuidx==5){
       menuidx = 1;
       menulock = 0;
       menuUpdate(menuidx, menulock);        
