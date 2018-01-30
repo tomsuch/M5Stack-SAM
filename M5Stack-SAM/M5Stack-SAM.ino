@@ -1,11 +1,17 @@
 #include <M5Stack.h>
 #include "EEPROM.h"
 #include "utility/DHT12.h"
+#include <Adafruit_Sensor.h>			   	// appBME280
+#include <Adafruit_BME280.h>			   	// appBME280
 #include <Wire.h>
 #include "SimpleBeacon.h"
 
 SimpleBeacon ble;
 DHT12 dht12;
+
+#define SEALEVELPRESSURE_HPA (1013.25)		// appBME280
+Adafruit_BME280 bme280; 				    // appBME280  
+bool status;  							  	// appBME280
 
 #define TFT_GREY 0x5AEB
 #define TFT_BROWN 0x38E0
@@ -29,6 +35,13 @@ unsigned long tmp_tmr = 0;
 
 void setup(void) {
   Serial.begin(115200);
+  
+ status = bme280.begin(0x76);  
+// if (!status) {  
+//    Serial.println("Could not find a valid BME280 sensor, check wiring!");  
+//    while (1);  
+// }  
+  
 
   if (!EEPROM.begin(EEPROM_SIZE))
   {

@@ -33,7 +33,6 @@ void appBLEBaecon(){
   menuUpdate(menuidx, menulock);  
 }
 
-
 void appDHT12(){
   menuDrawMenu(F("DHT12"),F(""),F("ESC"),F(""),sys_menucolor,sys_windowcolor,sys_menutextcolor);
   M5.Lcd.drawString(F("TEMPERATURE"),30,80,2);
@@ -55,6 +54,37 @@ void appDHT12(){
       //menuWindowClr(sys_windowcolor);
       M5.Lcd.drawFloat(tmp_teplota, 1, 140, 60, 6);
       M5.Lcd.drawFloat(tmp_vlhkost, 1, 140, 120, 6);
+    }
+  }
+  menuUpdate(menuidx, menulock);  
+}
+
+
+void appBME280(){
+  menuDrawMenu(F("BME280"),F(""),F("ESC"),F(""),sys_menucolor,sys_windowcolor,sys_menutextcolor);
+  M5.Lcd.drawString(F("TEMPERATURE"),30,60,2);
+  M5.Lcd.drawString(F("°C"),250,60,2);
+  M5.Lcd.drawString(F("HUMIDITY"),30,120,2);
+  M5.Lcd.drawString(F("%RH"),250,120,2);
+  M5.Lcd.drawString(F("PRESSURE"),30,180,2);
+  M5.Lcd.drawString(F("hPa"),250,180,2);
+  menuidx = 1;
+  menulock = 0;
+  M5.Lcd.setTextColor(sys_menutextcolor, sys_windowcolor);
+  while(M5.BtnB.wasPressed()){
+    M5.update();
+  }  
+  while(!M5.BtnB.wasPressed()){
+    M5.update();
+    if(millis()-tmp_tmr > 1000){
+      tmp_tmr = millis();
+      float tmp_temp = bme280.readTemperature();
+      float tmp_humi = bme280.readHumidity();
+      float tmp_pres = (bme280.readPressure()/100.0F);
+      //menuWindowClr(sys_windowcolor);
+      M5.Lcd.drawFloat(tmp_temp, 1, 140, 40, 6);
+      M5.Lcd.drawFloat(tmp_humi, 1, 140, 100, 6);
+      M5.Lcd.drawFloat(tmp_pres, 1, 140, 160, 6);
     }
   }
   menuUpdate(menuidx, menulock);  
