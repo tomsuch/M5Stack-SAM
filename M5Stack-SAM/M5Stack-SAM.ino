@@ -1,12 +1,16 @@
 #include <M5Stack.h>
+#include <Wire.h>
+
 #include "EEPROM.h"
 #include "utility/DHT12.h"
-#include <Wire.h>
 #include "SimpleBeacon.h"
 #include "qrcode.h"
+#include "SerialCommand.h"
 
 SimpleBeacon ble;
 DHT12 dht12;
+
+SerialCommand sCmd;
 
 #define TFT_GREY 0x5AEB
 #define TFT_BROWN 0x38E0
@@ -48,11 +52,20 @@ void setup(void) {
   sys_windowcolor = TFT_GREY;
 
   menuUpdate(menuidx, menulock);
-  
-  
+
+  sCmd.addCommand("eddystoneurl",    rcmdEddystoneURL);  
+  sCmd.addCommand("eddystonetlm",    rcmdEddystoneTLM);  
+  sCmd.addCommand("ibeacon",    rcmdIBeacon);  
+  sCmd.addCommand("sleep",    rcmdSleep);  
+  sCmd.addCommand("bright",    rcmdBright);  
+  sCmd.addCommand("clr",    rcmdClr);
+  sCmd.addCommand("qrc",    rcmdQRC);
+  sCmd.setDefaultHandler(rcmdDef);
+
 }
 
 void loop() {
+  sCmd.readSerial();
   if(M5.BtnA.wasPressed()) {
     if(menuidx>menuidxmin)menuidx--;
     menuUpdate(menuidx, menulock);

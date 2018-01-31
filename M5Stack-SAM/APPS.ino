@@ -4,15 +4,13 @@ void appQRPrint(){
   while(M5.BtnB.wasPressed()){
     M5.update();
   }  
-  QRPrint("www.google.com");
+  QRPrint("TomSuch|Prague CZ|www.m5stack.com|tomsuch@tomsuch.net");
   while(!M5.BtnB.wasPressed()){
     M5.update();
   }
   M5.Lcd.fillScreen(TFT_BLACK);
   menuUpdate(menuidx, menulock);  
 }
-
-
 
 void appBLEBaecon(){
   byte beaconIdx = 0;
