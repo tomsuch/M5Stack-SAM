@@ -7,6 +7,7 @@ Integrated applications:
 
 	DHT12 - Temperature / Humidity, Stopwatch, I2C scanner
 	Bluetooth BLE Beacon Simulator (iBeacon, Eddystone TLM + URL, ALTBeacon)
+	QRCODE generator
 
 
 Settings:
