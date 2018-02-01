@@ -8,7 +8,8 @@ Integrated applications:
 	DHT12 - Temperature / Humidity, Stopwatch, I2C scanner
 	Bluetooth BLE Beacon Simulator (iBeacon, Eddystone TLM + URL, ALTBeacon)
 	QRCODE generator
-
+	GY-512 (MPU6050) - gyro/accelerometer
+	SerialBridge - PASS-THRU USB<->UART2
 
 Settings:
   
@@ -17,6 +18,7 @@ Settings:
 
 Other:
   
+	System information - CPU Speed, Flash Size, Flash SPEED, SDK Version .......
 	Sleep mode
 	Serial control at 115200 8N1 and NL&CR termination
 
@@ -43,6 +45,8 @@ Serial commands:
 
 	Serial control at 115200 8N1 and NL&CR termination
 
+	wifiscan - scan for WiFi networks
+	i2cscan - scan I2C BUS for devices
 	bright [0-255] - display bright
         	EXAMPLE: bright 128
 	clr - clear display
