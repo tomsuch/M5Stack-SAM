@@ -46,11 +46,16 @@ Serial commands:
 	Serial control at 115200 8N1 and NL&CR termination
 
 	wifiscan - scan for WiFi networks
+	
 	i2cscan - scan I2C BUS for devices
+	
 	bright [0-255] - display bright
         	EXAMPLE: bright 128
+		
 	clr - clear display
+	
 	sleep - power sleep, wakeup on BTN_B
+	
 	qrc [text] - show QRCODE with text
 		EXAMPLE: qrc www.google.com
 	
