@@ -1,11 +1,12 @@
 #include <M5Stack.h>
 #include <Wire.h>
-
 #include "EEPROM.h"
 #include "utility/DHT12.h"
 #include "SimpleBeacon.h"
 #include "qrcode.h"
 #include "SerialCommand.h"
+#include "WiFi.h"
+#include "esp_system.h"
 
 SimpleBeacon ble;
 DHT12 dht12;
@@ -53,6 +54,8 @@ void setup(void) {
 
   menuUpdate(menuidx, menulock);
 
+  sCmd.addCommand("wifiscan",    rcmdWiFiScan);  
+  sCmd.addCommand("i2cscan",    rcmdIICScan);  
   sCmd.addCommand("eddystoneurl",    rcmdEddystoneURL);  
   sCmd.addCommand("eddystonetlm",    rcmdEddystoneTLM);  
   sCmd.addCommand("ibeacon",    rcmdIBeacon);  

@@ -93,7 +93,7 @@ void menuNastaveniLevel(byte inmenuidx){
 
 void menuSystemLevel(byte inmenuidx){
   menuidxmin = 0;
-  menuidxmax = 1;
+  menuidxmax = 2;
   switch (inmenuidx) {
     case 0:
       menuIsMenu = LOW;
@@ -101,6 +101,11 @@ void menuSystemLevel(byte inmenuidx){
       windowPrintInfoText(F("SLEEP/CHARGING"),sys_menutextcolor);
       break;
     case 1:
+      menuIsMenu = LOW;
+      menuWindowClr(sys_windowcolor);
+      windowPrintInfoText(F("M5 SYSTEM INFO"),sys_menutextcolor);
+      break;
+    case 2:
       menuIsMenu = LOW;
       menuWindowClr(sys_windowcolor);
       windowPrintInfoText(F("RETURN"),sys_menutextcolor);
@@ -112,7 +117,7 @@ void menuSystemLevel(byte inmenuidx){
 
 void menuAplikaceLevel(byte inmenuidx){
   menuidxmin = 0;
-  menuidxmax = 5;
+  menuidxmax = 7;
   switch (inmenuidx) {
     case 0:
       menuIsMenu = LOW;
@@ -142,6 +147,16 @@ void menuAplikaceLevel(byte inmenuidx){
     case 5:
       menuIsMenu = LOW;
       menuWindowClr(sys_windowcolor);
+      windowPrintInfoText(F("SERIAL BRIDGE"),sys_menutextcolor);
+      break;
+    case 6:
+      menuIsMenu = LOW;
+      menuWindowClr(sys_windowcolor);
+      windowPrintInfoText(F("GY-521"),sys_menutextcolor);
+      break;
+    case 7:
+      menuIsMenu = LOW;
+      menuWindowClr(sys_windowcolor);
       windowPrintInfoText(F("RETURN"),sys_menutextcolor);
       break;
     default:
@@ -156,6 +171,9 @@ void menuRunApp(byte inmenuidx, byte inmenulock){
       M5.powerOFF();        
   }
   if(inmenulock==2 and inmenuidx==1){
+    appSysInfo();
+  }
+  if(inmenulock==2 and inmenuidx==2){
       menuidx = 2;
       menulock = 0;
       menuUpdate(menuidx, menulock);        
@@ -186,6 +204,12 @@ void menuRunApp(byte inmenuidx, byte inmenulock){
     appQRPrint();
   }
   if(inmenulock==1 and inmenuidx==5){
+    appSerialBridge(0, LOW);
+  }
+  if(inmenulock==1 and inmenuidx==6){
+    appGY521();
+  }
+  if(inmenulock==1 and inmenuidx==7){
       menuidx = 1;
       menulock = 0;
       menuUpdate(menuidx, menulock);        

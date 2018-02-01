@@ -1,3 +1,77 @@
+int square(int x) {  // function declared and implemented
+    return x*x;
+}
+
+String getSTAMac() {
+  uint8_t baseMac[6];
+  esp_read_mac(baseMac, ESP_MAC_WIFI_STA);
+  char baseMacChr[18] = {0};
+  sprintf(baseMacChr, "%02X:%02X:%02X:%02X:%02X:%02X", baseMac[0], baseMac[1], baseMac[2], baseMac[3], baseMac[4], baseMac[5]);
+  return String(baseMacChr);
+}
+
+void rcmdWiFiScan(){
+    WiFi.mode(WIFI_STA);
+    WiFi.disconnect();
+    delay(100);
+    Serial.println(F("scan start"));
+    int n = WiFi.scanNetworks();
+    Serial.println(F("scan done"));
+    if (n == 0) {
+        Serial.println(F("no networks found"));
+    } else {
+        Serial.print(n);
+        Serial.println(F(" networks found"));
+        for (int i = 0; i < n; ++i) {
+            Serial.print(i + 1);
+            Serial.print(": ");
+            Serial.print(WiFi.SSID(i));
+            Serial.print(" (");
+            Serial.print(WiFi.RSSI(i));
+            Serial.print(")");
+            Serial.println((WiFi.encryptionType(i) == WIFI_AUTH_OPEN)?" ":"*");
+            delay(10);
+        }
+    }
+    Serial.println("");
+}
+
+void rcmdIICScan(){
+  byte error, address;
+  int nDevices;
+
+  Serial.println(F("Scanning..."));
+
+  nDevices = 0;
+  for(address = 1; address < 127; address++ ) 
+  {
+    Wire.beginTransmission(address);
+    error = Wire.endTransmission();
+
+    if (error == 0)
+    {
+      Serial.print(F("I2C device found at address 0x"));
+      if (address<16) 
+        Serial.print("0");
+      Serial.print(address,HEX);
+      Serial.println("  !");
+
+      nDevices++;
+    }
+    else if (error==4) 
+    {
+      Serial.print(F("Unknown error at address 0x"));
+      if (address<16) 
+        Serial.print("0");
+      Serial.println(address,HEX);
+    }    
+  }
+  if (nDevices == 0)
+    Serial.println(F("No I2C devices found\n"));
+  else
+    Serial.println(F("done\n"));  
+}
+
 void rcmdQRC(){
   int aNumber;
   char *arg;
@@ -51,7 +125,7 @@ void rcmdIBeacon(){
               ble.iBeacon(tmpmajor,tmpminor,tmppwr);
               delay(100);
               ble.end();
-              Serial.println("OK");
+              Serial.println(F("OK"));
             }
           }
         }
@@ -80,7 +154,7 @@ void rcmdEddystoneURL(){
             ble.EddystoneURIPlain(tmppref,arg,tmppwr);
             delay(100);
             ble.end();
-            Serial.println("OK");
+            Serial.println(F("OK"));
           }
         }
       }
