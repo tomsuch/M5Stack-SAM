@@ -329,8 +329,8 @@ void appStopky(){
       }      
     }else{
       if(M5.BtnA.wasPressed()){
-        tmp_sec = 0;
-        tmp_min = 0;
+        //tmp_sec = 0;
+        //tmp_min = 0;
         tmp_run = HIGH;
       }
     }
