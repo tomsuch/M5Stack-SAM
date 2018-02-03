@@ -10,6 +10,7 @@ Integrated applications:
 	QRCODE generator
 	GY-512 (MPU6050) - gyro/accelerometer
 	SerialBridge - PASS-THRU USB<->UART2
+	WiFi SCANNER
 
 Settings:
   
