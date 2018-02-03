@@ -17,19 +17,27 @@ void appWiFiScan(){
   menuDrawMenu(F("WiFi SCAN"),F("RESCAN"),F("ESC"),F("PAGE"),sys_menucolor,sys_windowcolor,sys_menutextcolor);
   menuidx = 1;
   menulock = 0;
+
   uint16_t wifi_count = 0;
   boolean wifi_showlock = LOW;
   byte list_lines = 5;
-  byte list_page = 0;
-  byte list_pages = 0;
-  byte list_lastpagelines = 0;
+  uint16_t list_page = 0;
+  uint16_t list_pages = 0;
+  uint16_t list_lastpagelines = 0;
   
   M5.Lcd.setTextColor(sys_menutextcolor,sys_windowcolor);
   M5.Lcd.drawCentreString(F("SCANNING....."),TFT_W/2,TFT_H/2,2);
+
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
   delay(100);
+
+  while(M5.BtnB.wasPressed()){
+    M5.update();
+  }  
+
   wifi_count = WiFi.scanNetworks();
+
   if(wifi_count > 0){    
     if(wifi_count > list_lines){
       list_lastpagelines = wifi_count % list_lines;
@@ -40,13 +48,10 @@ void appWiFiScan(){
         list_pages = wifi_count / list_lines;
       }
     }else{
-      list_page = 0;
       list_pages = 1;
     }
   }
-  while(M5.BtnB.wasPressed()){
-    M5.update();
-  }  
+
   while(!M5.BtnB.wasPressed()){
     if(wifi_count==0){
       if(!wifi_showlock){
@@ -57,22 +62,28 @@ void appWiFiScan(){
     }else{
       if(!wifi_showlock){
         menuWindowClr(sys_windowcolor);
-        char buffer[40];
-        sprintf(buffer, "FOUND %d NETWORKS, PAGE: %d/%d", wifi_count, list_page+1, list_pages);
-        M5.Lcd.drawCentreString(buffer,TFT_W/2,40,2);
+        M5.Lcd.drawCentreString("FOUND "+String(wifi_count)+" NETWORKS, PAGE: "+String(list_page+1)+"/"+String(list_pages),TFT_W/2,40,2);
         if((list_page + 1) == list_pages){
-          if(list_lastpagelines == 0){
+          if(list_lastpagelines == 0 and wifi_count >= list_lines){
             for(byte i = 0;i<list_lines;i++){
               M5.Lcd.drawString(WiFi.SSID(i+(list_page*list_lines)),5,80+(i*20),2);
               M5.Lcd.drawString(String(WiFi.RSSI(i+(list_page*list_lines))) + " dB",250,80+(i*20),2);
               M5.Lcd.drawString((WiFi.encryptionType(i+(list_page*list_lines)) == WIFI_AUTH_OPEN)?" ":"*",310,80+(i*20),2);
             }
           }else{
-            for(byte i = 0;i<list_lastpagelines;i++){
-              M5.Lcd.drawString(WiFi.SSID(i+(list_page*list_lines)),5,80+(i*20),2);
-              M5.Lcd.drawString(String(WiFi.RSSI(i+(list_page*list_lines))) + " dB",250,80+(i*20),2);
-              M5.Lcd.drawString((WiFi.encryptionType(i+(list_page*list_lines)) == WIFI_AUTH_OPEN)?" ":"*",310,80+(i*20),2);
-            }            
+            if(list_pages>1){
+              for(byte i = 0;i<list_lastpagelines;i++){
+                M5.Lcd.drawString(WiFi.SSID(i+(list_page*list_lines)),5,80+(i*20),2);
+                M5.Lcd.drawString(String(WiFi.RSSI(i+(list_page*list_lines))) + " dB",250,80+(i*20),2);
+                M5.Lcd.drawString((WiFi.encryptionType(i+(list_page*list_lines)) == WIFI_AUTH_OPEN)?" ":"*",310,80+(i*20),2);
+              }            
+            }else{
+              for(byte i = 0;i<wifi_count;i++){
+                M5.Lcd.drawString(WiFi.SSID(i+(list_page*list_lines)),5,80+(i*20),2);
+                M5.Lcd.drawString(String(WiFi.RSSI(i+(list_page*list_lines))) + " dB",250,80+(i*20),2);
+                M5.Lcd.drawString((WiFi.encryptionType(i+(list_page*list_lines)) == WIFI_AUTH_OPEN)?" ":"*",310,80+(i*20),2);
+              }                          
+            }
           }
         }else{
             for(byte i = 0;i<list_lines;i++){
@@ -85,6 +96,8 @@ void appWiFiScan(){
       }       
     }
     if(M5.BtnA.wasPressed()){
+        list_page = 0;
+        list_pages = 0;
         menuWindowClr(sys_windowcolor);
         M5.Lcd.drawCentreString(F("SCANNING....."),TFT_W/2,TFT_H/2,2);
         wifi_count = WiFi.scanNetworks();
@@ -99,11 +112,11 @@ void appWiFiScan(){
               list_pages = wifi_count / list_lines;
             }
           }else{
-            list_page = 0;
             list_pages = 1;
           }
         }
     }
+
     if(M5.BtnC.wasPressed()){
       if(wifi_count > 0 and list_pages > 1){
         list_page++;
