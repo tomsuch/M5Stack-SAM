@@ -117,7 +117,7 @@ void menuSystemLevel(byte inmenuidx){
 
 void menuAplikaceLevel(byte inmenuidx){
   menuidxmin = 0;
-  menuidxmax = 7;
+  menuidxmax = 8;
   switch (inmenuidx) {
     case 0:
       menuIsMenu = LOW;
@@ -155,6 +155,11 @@ void menuAplikaceLevel(byte inmenuidx){
       windowPrintInfoText(F("GY-521"),sys_menutextcolor);
       break;
     case 7:
+      menuIsMenu = LOW;
+      menuWindowClr(sys_windowcolor);
+      windowPrintInfoText(F("WiFi SCANNER"),sys_menutextcolor);
+      break;
+    case 8:
       menuIsMenu = LOW;
       menuWindowClr(sys_windowcolor);
       windowPrintInfoText(F("RETURN"),sys_menutextcolor);
@@ -210,6 +215,9 @@ void menuRunApp(byte inmenuidx, byte inmenulock){
     appGY521();
   }
   if(inmenulock==1 and inmenuidx==7){
+    appWiFiScan();
+  }
+  if(inmenulock==1 and inmenuidx==8){
       menuidx = 1;
       menulock = 0;
       menuUpdate(menuidx, menulock);        

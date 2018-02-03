@@ -1,3 +1,123 @@
+//void appTemplate(){
+//  menuDrawMenu(F("APP TOP TEXT"),F("A"),F("B"),F("C"),sys_menucolor,sys_windowcolor,sys_menutextcolor);
+//  menuidx = 1;
+//  menulock = 0;
+//  M5.Lcd.setTextColor(sys_menutextcolor,sys_windowcolor);
+//  while(M5.BtnB.wasPressed()){
+//    M5.update();
+//  }  
+//  while(!M5.BtnB.wasPressed()){
+//    // APP LOOP CODE HERE
+//    M5.update();    
+//  }
+//  menuUpdate(menuidx, menulock);    
+//}
+
+void appWiFiScan(){
+  menuDrawMenu(F("WiFi SCAN"),F("RESCAN"),F("ESC"),F("PAGE"),sys_menucolor,sys_windowcolor,sys_menutextcolor);
+  menuidx = 1;
+  menulock = 0;
+  uint16_t wifi_count = 0;
+  boolean wifi_showlock = LOW;
+  byte list_lines = 5;
+  byte list_page = 0;
+  byte list_pages = 0;
+  byte list_lastpagelines = 0;
+  
+  M5.Lcd.setTextColor(sys_menutextcolor,sys_windowcolor);
+  M5.Lcd.drawCentreString(F("SCANNING....."),TFT_W/2,TFT_H/2,2);
+  WiFi.mode(WIFI_STA);
+  WiFi.disconnect();
+  delay(100);
+  wifi_count = WiFi.scanNetworks();
+  if(wifi_count > 0){    
+    if(wifi_count > list_lines){
+      list_lastpagelines = wifi_count % list_lines;
+      if(list_lastpagelines>0){
+        list_pages = (wifi_count - list_lastpagelines) / list_lines;
+        list_pages++;
+      }else{
+        list_pages = wifi_count / list_lines;
+      }
+    }else{
+      list_page = 0;
+      list_pages = 1;
+    }
+  }
+  while(M5.BtnB.wasPressed()){
+    M5.update();
+  }  
+  while(!M5.BtnB.wasPressed()){
+    if(wifi_count==0){
+      if(!wifi_showlock){
+        menuWindowClr(sys_windowcolor);
+        M5.Lcd.drawCentreString(F("NO NETWORKS FOUND"),TFT_W/2,TFT_H/2,2);
+        wifi_showlock = HIGH;        
+      }
+    }else{
+      if(!wifi_showlock){
+        menuWindowClr(sys_windowcolor);
+        char buffer[40];
+        sprintf(buffer, "FOUND %d NETWORKS, PAGE: %d/%d", wifi_count, list_page+1, list_pages);
+        M5.Lcd.drawCentreString(buffer,TFT_W/2,40,2);
+        if((list_page + 1) == list_pages){
+          if(list_lastpagelines == 0){
+            for(byte i = 0;i<list_lines;i++){
+              M5.Lcd.drawString(WiFi.SSID(i+(list_page*list_lines)),5,80+(i*20),2);
+              M5.Lcd.drawString(String(WiFi.RSSI(i+(list_page*list_lines))) + " dB",250,80+(i*20),2);
+              M5.Lcd.drawString((WiFi.encryptionType(i+(list_page*list_lines)) == WIFI_AUTH_OPEN)?" ":"*",310,80+(i*20),2);
+            }
+          }else{
+            for(byte i = 0;i<list_lastpagelines;i++){
+              M5.Lcd.drawString(WiFi.SSID(i+(list_page*list_lines)),5,80+(i*20),2);
+              M5.Lcd.drawString(String(WiFi.RSSI(i+(list_page*list_lines))) + " dB",250,80+(i*20),2);
+              M5.Lcd.drawString((WiFi.encryptionType(i+(list_page*list_lines)) == WIFI_AUTH_OPEN)?" ":"*",310,80+(i*20),2);
+            }            
+          }
+        }else{
+            for(byte i = 0;i<list_lines;i++){
+              M5.Lcd.drawString(WiFi.SSID(i+(list_page*list_lines)),5,80+(i*20),2);
+              M5.Lcd.drawString(String(WiFi.RSSI(i+(list_page*list_lines))) + " dB",250,80+(i*20),2);
+              M5.Lcd.drawString((WiFi.encryptionType(i+(list_page*list_lines)) == WIFI_AUTH_OPEN)?" ":"*",310,80+(i*20),2);
+            }          
+        }
+        wifi_showlock = HIGH;        
+      }       
+    }
+    if(M5.BtnA.wasPressed()){
+        menuWindowClr(sys_windowcolor);
+        M5.Lcd.drawCentreString(F("SCANNING....."),TFT_W/2,TFT_H/2,2);
+        wifi_count = WiFi.scanNetworks();
+        wifi_showlock = LOW;
+        if(wifi_count > 0){    
+          if(wifi_count > list_lines){
+            list_lastpagelines = wifi_count % list_lines;
+            if(list_lastpagelines>0){
+              list_pages = (wifi_count - list_lastpagelines) / list_lines;
+              list_pages++;
+            }else{
+              list_pages = wifi_count / list_lines;
+            }
+          }else{
+            list_page = 0;
+            list_pages = 1;
+          }
+        }
+    }
+    if(M5.BtnC.wasPressed()){
+      if(wifi_count > 0 and list_pages > 1){
+        list_page++;
+        if(list_page == list_pages){
+          list_page = 0;
+        }
+        wifi_showlock = LOW;
+      }
+    }
+    M5.update();    
+  }
+  menuUpdate(menuidx, menulock);
+}
+
 
 void appGY521(){
   menuDrawMenu(F("GY-521"),F(""),F("ESC"),F(""),sys_menucolor,sys_windowcolor,sys_menutextcolor);
@@ -103,7 +223,7 @@ void appSysInfo(){
   menuUpdate(menuidx, menulock);
 }
 void appSerialBridge(byte inSpdIdx, boolean inRun){
-  HardwareSerial Serial2 = HardwareSerial(2);
+  HardwareSerial Serial2(2);
   byte spdIdx = 0;
   int8_t spdLast = -1;
   unsigned long spdCfg = 9600;
