@@ -33,6 +33,7 @@ void appBLEBaecon(){
   menuUpdate(menuidx, menulock);  
 }
 
+#if defined(WS_DHT12)
 void appDHT12(){
   menuDrawMenu(F("DHT12"),F(""),F("ESC"),F(""),sys_menucolor,sys_windowcolor,sys_menutextcolor);
   M5.Lcd.drawString(F("TEMPERATURE"),30,80,2);
@@ -59,7 +60,7 @@ void appDHT12(){
   menuUpdate(menuidx, menulock);  
 }
 
-
+#elif defined(WS_BME280)
 void appBME280(){
   menuDrawMenu(F("BME280"),F(""),F("ESC"),F(""),sys_menucolor,sys_windowcolor,sys_menutextcolor);
   M5.Lcd.drawString(F("TEMPERATURE"),30,60,2);
@@ -89,6 +90,7 @@ void appBME280(){
   }
   menuUpdate(menuidx, menulock);  
 }
+#endif
 
 void appStopky(){
   boolean tmp_run = false;

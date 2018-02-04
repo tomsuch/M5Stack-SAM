@@ -112,12 +112,16 @@ void menuSystemLevel(byte inmenuidx){
 
 void menuAplikaceLevel(byte inmenuidx){
   menuidxmin = 0;
-  menuidxmax = 5;
+  menuidxmax = 4;
   switch (inmenuidx) {
     case 0:
       menuIsMenu = LOW;
       menuWindowClr(sys_windowcolor);
-      windowPrintInfoText(F("DHT12"),sys_menutextcolor);
+      #if defined(WS_DHT12)
+        windowPrintInfoText(F("DHT12"),sys_menutextcolor);
+      #elif defined(WS_BME280)
+        windowPrintInfoText(F("BME280"),sys_menutextcolor);
+      #endif
       break;
     case 1:
       menuIsMenu = LOW;
@@ -135,11 +139,6 @@ void menuAplikaceLevel(byte inmenuidx){
       windowPrintInfoText(F("BLE Beacon SIMULATOR"),sys_menutextcolor);
       break;
     case 4:
-      menuIsMenu = LOW;
-      menuWindowClr(sys_windowcolor);
-      windowPrintInfoText(F("BME280"),sys_menutextcolor);
-      break;
-    case 5:
       menuIsMenu = LOW;
       menuWindowClr(sys_windowcolor);
       windowPrintInfoText(F("RETURN"),sys_menutextcolor);
@@ -171,7 +170,11 @@ void menuRunApp(byte inmenuidx, byte inmenulock){
   }
 
   if(inmenulock==1 and inmenuidx==0){
-    appDHT12();
+    #if defined(WS_DHT12)
+      appDHT12();
+    #elif defined(WS_BME280)
+      appBME280();
+    #endif
   }
   if(inmenulock==1 and inmenuidx==1){
     appStopky();
@@ -183,9 +186,6 @@ void menuRunApp(byte inmenuidx, byte inmenulock){
     appBLEBaecon();
   }
   if(inmenulock==1 and inmenuidx==4){
-    appBME280();
-  }
-  if(inmenulock==1 and inmenuidx==5){
       menuidx = 1;
       menulock = 0;
       menuUpdate(menuidx, menulock);        
